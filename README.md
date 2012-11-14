@@ -21,7 +21,8 @@ A view class wrapping meteor's template helpers, events and callbacks, inspired 
 ### create `Meteor.View.create(String name, Object properties)`
 
 To create a new view instance, use this method.  
-`Meteor.View.create` returns a view instance, **not** a constructor function! Anyway, because of Meteor's nature, you probably won't need the view instance later.
+`Meteor.View.create` returns a view instance, **not** a constructor function! Because of Meteor's nature, you probably 
+won't need the view instance later, anyway.
 
 * `name` must be the name of the template you want to create the view for  
 * `properties` must be an object literal and will be merged into the new view's prototype.
