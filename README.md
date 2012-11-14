@@ -26,7 +26,7 @@ To create a new view instance, use this method.
 * `name` must be the name of the template you want to create the view for  
 * `properties` must be an object literal and will be merged into the new view's prototype.
 
-#### initialize (constructor)
+### initialize (constructor)
 If a `initialize` method is present in the properties object, it will be called when the instance is created
 
     view = Meteor.view.create("foo", {
@@ -35,7 +35,32 @@ If a `initialize` method is present in the properties object, it will be called 
         }
     });
 
-#### elements
+### helpers
+A map for all the template helpers used.
+
+**The template**
+
+    <template name="foo">
+        {{#each articles}}
+            ...
+        {{/each}}
+    </template>
+
+
+**The view**
+
+    view = Meteor.view.create("foo", {
+        helpers: {
+            "articles" : "getArticles"
+        },
+        getArticles: function() {
+            return Articles.find();
+        }
+    });
+
+**The context/`this` in the callback is bound to the view instance!** 
+
+### elements
 A map representing dom elements you want to use later. Each key value pair of this map is defined like so:    
 `{'String selector' : 'String instanceMember'}`.
 
@@ -44,7 +69,9 @@ A map representing dom elements you want to use later. Each key value pair of th
             ".foo" : "foo",
             ".bar" : "bar"
         },
+        
         ...
+        
         onClick: function(){
             $(this.foo).hide();
             $(this.bar).show();
@@ -57,3 +84,43 @@ is used to find the elements. So you'll have an array with dom elements in your 
 There won't be any elements if the template hasn't been rendered or is empty for whatever reasons.
 
 **If you care for older browsers don't use elements! It uses `__defineGetter__` to return the current dom elements.** 
+
+### events
+A map describing the events handled in a template. Supports events as described in the 
+[meteor doc](http://docs.meteor.com/#template_events).
+
+    view = Meteor.view.create("foo", {
+        events: {
+            "click a.archive-article": "onArchive"
+        },
+        
+        ...
+        
+        onArchive: function(evt){
+            evt.preventDefault();
+            this.archive(evt.currentTarget);
+        },
+        archive: function(link) {
+            ...
+        }
+    });
+
+**The context/`this` in the callback is bound to the view instance and not the dom element!** 
+
+### callbacks
+A map of callbacks (rendered, created, destroyed) for this template.  
+
+    view = Meteor.view.create("foo", {
+        callbacks: {
+            "rendered": "onRendered"
+        },
+        onRendered: function(template) {
+            template.findAll('.foo').forEach((el) ->
+              el.style.background = "red";
+            )
+        }
+    });
+    
+* The callback function's context/`this` will be bound to the view instance. 
+* The first argument will **always** be the template instance you would normally access with `this`
+* All other parameters will follow the template instance
