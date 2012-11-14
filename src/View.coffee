@@ -8,6 +8,8 @@ do ->
   ERROR_METHOD_MISSING = "Meteor.View: a method you used inside a map does not exist: "
 
   class View
+    initialize: null
+    
     elements: null
     events: null
     helpers: null
@@ -66,10 +68,15 @@ do ->
             else
               return []
           )
+          
+      @initialize() if @initialize isnt null
 
     _getMethod: (name) ->
       throw new TypeError ERROR_METHOD_MISSING + name if typeof @[name] isnt "function"
-      return @[name]
+      
+      ctx = @
+      m = -> 
+        ctx[name].apply ctx, _.toArray(arguments)
 
     _bindCallback: (name, handler) ->
       ctx = @
