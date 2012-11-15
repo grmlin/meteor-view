@@ -27,7 +27,9 @@ won't need the view instance later, anyway.
 * `name` must be the name of the template you want to create the view for  
 * `properties` must be an object literal and will be merged into the new view's prototype.
 
-### initialize (constructor)
+--- 
+
+### <span style="font-weight:normal">properties.</span>initialize (constructor)
 If a `initialize` method is present in the properties object, it will be called when the instance is created
 
     view = Meteor.view.create("foo", {
@@ -36,7 +38,7 @@ If a `initialize` method is present in the properties object, it will be called 
         }
     });
 
-### helpers
+### <span style="font-weight:normal">properties.</span>helpers
 A map for all the template helpers used.
 
 **The template**
@@ -61,7 +63,7 @@ A map for all the template helpers used.
 
 **The context/`this` in the callback is bound to the view instance!** 
 
-### elements
+### <span style="font-weight:normal">properties.</span>elements
 A map representing dom elements you want to use later. Each key value pair of this map is defined like so:    
 `{'String selector' : 'String instanceMember'}`.
 
@@ -86,7 +88,7 @@ There won't be any elements if the template hasn't been rendered or is empty for
 
 **If you care for older browsers don't use elements! It uses `__defineGetter__` to return the current dom elements.** 
 
-### events
+### <span style="font-weight:normal">properties.</span>events
 A map describing the events handled in a template. Supports events as described in the 
 [meteor doc](http://docs.meteor.com/#template_events).
 
@@ -108,7 +110,7 @@ A map describing the events handled in a template. Supports events as described 
 
 **The context/`this` in the callback is bound to the view instance and not the dom element!** 
 
-### callbacks
+### <span style="font-weight:normal">properties.</span>callbacks
 A map of callbacks (rendered, created, destroyed) for this template.  
 
     view = Meteor.view.create("foo", {
