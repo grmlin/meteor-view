@@ -35,9 +35,9 @@ do ->
         for own event, handler of @events
           eventsMap[event] = @_getMethod(handler)
 
-      @_templateWrapper.events = eventsMap
+      @_templateWrapper.events(eventsMap)
 
-      # ## Add the helpers
+      # ## Add the helper callbacks
       helpersMap = {}
       unless @helpers is null
         for own helper, handler of @helpers
@@ -61,13 +61,14 @@ do ->
 
       unless @elements is null
         for own selector, member of @elements
-          throw new Error ERROR_NO_GETTERS if typeof @.__defineGetter__ isnt "function"
-          @.__defineGetter__(member, ->
-            if @_template isnt null
-              return @_template.findAll(selector)
-            else
-              return []
-          )
+          do (selector) =>
+            throw new Error ERROR_NO_GETTERS if typeof @.__defineGetter__ isnt "function"
+            @.__defineGetter__(member, ->
+              if @_template isnt null
+                return @_template.findAll(selector)
+              else
+                return []
+            )
           
       @initialize() if @initialize isnt null
 
