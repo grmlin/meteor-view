@@ -27,6 +27,7 @@ won't need the view instance later, anyway.
 * `name` must be the name of the template you want to create the view for  
 * `properties` must be an object literal and will be merged into the new view's prototype.
 
+You can see a working example in my diary project [here](https://github.com/grmlin/diary/blob/master/client/cs/views/Article.coffee).
 --- 
 
 ### <span style="font-weight:normal">properties.</span>initialize (constructor)
