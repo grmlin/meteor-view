@@ -1,6 +1,4 @@
 do ->
-  SUCCESS_CREATED = "Created view class "  
-  ERROR_NAME_NO_STRING = "Meteor.View: name has to be a string!"
   ERROR_MIXIN_NO_OBJECT = "Meteor.View: viewMixin has to be an object!"
   ERROR_NO_CONSTRUCTOR = "Meteor.View: has to be used as a constructor function with the \"new\" keyword"
   ERROR_TEMPLATE_UNAVAILABLE = "Meteor.View: There is no template named "
@@ -24,7 +22,7 @@ do ->
       unless @ instanceof View
         throw new TypeError ERROR_NO_CONSTRUCTOR
       unless Template[@name]
-        throw new TypeError ERROR_TEMPLATE_UNAVAILABLE + @name
+        throw new Error ERROR_TEMPLATE_UNAVAILABLE + @name
 
       # ## First of all, store the template
       @_templateWrapper = Template[@name]
@@ -70,7 +68,7 @@ do ->
                 return []
             )
           
-      @initialize() if @initialize isnt null
+      @initialize.apply(@, _.toArray(arguments).slice(1)) if @initialize isnt null
 
     _getMethod: (name) ->
       throw new TypeError ERROR_METHOD_MISSING + name if typeof @[name] isnt "function"
@@ -90,19 +88,16 @@ do ->
         oldMethod?.apply(this, args)
 
   Meteor.View =
-    create: (name, viewMixin) ->
-      throw new TypeError ERROR_NAME_NO_STRING unless typeof name is "string"
+    create: (viewMixin) ->
       throw new TypeError ERROR_MIXIN_NO_OBJECT unless typeof viewMixin is "object"
 
       class MeteorView extends View
-        constructor: ->
-          super(name)
+        constructor: (name) ->
+          super
 
       _.extend(MeteorView.prototype, viewMixin)
 
-      Meteor._debug SUCCESS_CREATED + name
-
-      return new MeteorView()
+      return MeteorView
       
   
   

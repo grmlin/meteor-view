@@ -19,25 +19,34 @@ You can see a working example in my diary project [here](https://github.com/grml
 
 ## Meteor.View
 
-### create `Meteor.View.create(String name, Object properties)`
+### create `Meteor.View.create(Object properties)`
 
-To create a new view instance, use this method.  
-`Meteor.View.create` returns a view instance, **not** a constructor function! Because of Meteor's nature, you probably 
-won't need the view instance later, anyway.
+To create a new view class, use this method.  
+`Meteor.View.create` returns a view class! 
 
-* `name` must be the name of the template you want to create the view for  
 * `properties` must be an object literal and will be merged into the new view's prototype.
+
+#### View instantiation
+A view class has to be instantiated with `new`, and the first argument of the constructor call **has to be the template name** used with this view instance.  
+All other arguments you pass into the constructor are later available in the `initialize` method.
+
+    var FooView = Meteor.View.create({...});
+    myView = new FooView("foo_template", [*args]);
 
 --- 
 
 ### <span style="font-weight:normal">properties.</span>initialize (constructor)
 If a `initialize` method is present in the properties object, it will be called when the instance is created
 
-    view = Meteor.view.create("foo", {
-        initialize: function() {
-            console.log(this.name + " view created");
+    View = Meteor.view.create({
+        initialize: function(foo) {
+            console.log(foo); //prints "Hello World"
         }
     });
+    
+    ...
+    
+    view = new View("a_template", "Hello World");
 
 ### <span style="font-weight:normal">properties.</span>helpers
 A map for all the template helpers used.
@@ -53,7 +62,7 @@ A map for all the template helpers used.
 
 **The view**
 
-    view = Meteor.view.create("foo", {
+    View = Meteor.view.create({
         helpers: {
             "articles" : "getArticles"
         },
@@ -68,7 +77,7 @@ A map for all the template helpers used.
 A map representing dom elements you want to use later. Each key value pair of this map is defined like so:    
 `{'String selector' : 'String instanceMember'}`.
 
-    view = Meteor.view.create("foo", {
+    View = Meteor.view.create({
         elements: {
             ".foo" : "foo",
             ".bar" : "bar"
@@ -93,7 +102,7 @@ There won't be any elements if the template hasn't been rendered or is empty for
 A map describing the events handled in a template. Supports events as described in the 
 [meteor doc](http://docs.meteor.com/#template_events).
 
-    view = Meteor.view.create("foo", {
+    View = Meteor.view.create({
         events: {
             "click a.archive-article": "onArchive"
         },
@@ -114,7 +123,7 @@ A map describing the events handled in a template. Supports events as described 
 ### <span style="font-weight:normal">properties.</span>callbacks
 A map of callbacks (rendered, created, destroyed) for this template.  
 
-    view = Meteor.view.create("foo", {
+    View = Meteor.view.create({
         callbacks: {
             "rendered": "onRendered"
         },
