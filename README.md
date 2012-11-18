@@ -28,7 +28,7 @@ To create a new view class, use this method.
 
 #### View instantiation
 A view class has to be instantiated with `new`, and the first argument of the constructor call **has to be the template name** used with this view instance.  
-All other arguments you pass into the constructor are later available in the `initialize` method.
+All other arguments you pass into the constructor will be available later within the `initialize` method.
 
     var FooView = Meteor.View.create({...});
     myView = new FooView("foo_template", [*args]);
